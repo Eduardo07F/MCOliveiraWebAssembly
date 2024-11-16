@@ -1,0 +1,113 @@
+﻿@page "/ClienteAdd"
+@page "/ClienteEdit/{id:int}"
+
+@using Entidades;
+@using MCOliveiraWebAssembly.Services;
+@using Microsoft.AspNetCore.Components.Forms;
+
+@inject Services.IServices.IClienteService _clienteService;
+@inject NavigationManager _navigationManager;
+
+<PageTitle>Formulário Cliente</PageTitle>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Cadastro de Cliente</h2>
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <EditForm Model="@cliente" OnInvalidSubmit="SalvarCliente">
+                <DataAnnotationsValidator/>
+                <!-- ID (Campo Somente Leitura) -->
+                <div class="mb-3">
+                    <label for="id" class="form-label">ID</label>
+                    <InputNumber id="id" class="form-control" @bind-Value="cliente.id" readonly />
+                </div>
+
+                <!-- CPF/CNPJ -->
+                <div class="mb-3">
+                    <label for="cpf_cnpj" class="form-label">CPF/CNPJ</label>
+                    <InputText id="cpf_cnpj" class="form-control" @bind-Value="cliente.Cpf_Cnpj" required />
+                </div>
+
+                <!-- Nome -->
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <InputText id="nome" class="form-control" @bind-Value="cliente.Nome" required />
+                </div>
+
+                <!-- Celular -->
+                <div class="mb-3">
+                    <label for="cel" class="form-label">Celular</label>
+                    <InputText id="cel" class="form-control" @bind-Value="cliente.Cel" placeholder="(XX) XXXXX-XXXX" />
+                </div>
+
+                <!-- Telefone -->
+                <div class="mb-3">
+                    <label for="telefone" class="form-label">Telefone</label>
+                    <InputText id="telefone" class="form-control" @bind-Value="cliente.Telefone" placeholder="(XX) XXXX-XXXX" />
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <InputText id="email" type="email" class="form-control" @bind-Value="cliente.Email" required />
+                </div>
+
+                <!-- Tipo (Pessoa Física ou Jurídica) -->
+               <div class="mb-3 form-check">
+                    <InputCheckbox id="isCnpj" class="form-check-input" @bind-Value="cliente.IS_CNPJ" />
+                    <label class="form-check-label" for="isCnpj">É Pessoa Jurídica?</label>
+                </div>
+
+                <!-- Ativo -->
+                <div class="mb-3 form-check">
+                    <InputCheckbox id="ativo" class="form-check-input" @bind-Value="cliente.Ativo" />
+                    <label class="form-check-label" for="ativo">Ativo</label>
+                </div>
+
+                <!-- Botões -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg mx-2">Salvar</button>
+                    <button type="reset" class="btn btn-secondary btn-lg mx-2">Cancelar</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+
+    public Cliente cliente = new Cliente();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (id != 0)
+        {
+            cliente = await _clienteService.GetById(id);
+        }
+    }
+
+    protected async Task SalvarCliente()
+    {
+        if (id != 0)
+        {
+            await _clienteService.Update(cliente);
+        }
+        else
+        {
+            await _clienteService.Add(cliente);
+        }
+
+        HomeCliente();
+    }
+
+    public void HomeCliente()
+    {
+        _navigationManager.NavigateTo("/ClientePage");
+    }
+
+}

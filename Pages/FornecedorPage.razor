@@ -1,0 +1,92 @@
+﻿@page "/FornecedorPage"
+
+<PageTitle>Fornecedores</PageTitle>
+
+<div class="card mb-4 shadow-sm mx-auto col-md-6">
+    <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #05163D; color: honeydew;">
+        <h2>Cadastro de Fornecedores</h2>
+    </div>
+    <div class="card-body text-center">
+        <p class="text-muted">
+            <b>Aqui você pode gerenciar os dados dos fornecedores e controlar informações importantes para seu negócio.</b>
+        </p>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #0A2464; color: honeydew;">
+        <h2>Detalhes dos Fornecedores</h2>
+        <button class="btn btn-info" @onclick="AddSupplier">Incluir Novo Fornecedor</button>
+    </div>
+    <div class="card-body">
+        @if (Suppliers.Count > 0)
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Contato</th>
+                        <th>Telefone</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var supplier in Suppliers)
+                    {
+                        <tr>
+                            <td>@supplier.Id</td>
+                            <td>@supplier.Name</td>
+                            <td>@supplier.Contact</td>
+                            <td>@supplier.Phone</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning" @onclick="() => EditSupplier(supplier.Id)">Editar</button>
+                                <button class="btn btn-sm btn-danger" @onclick="() => DeleteSupplier(supplier.Id)">Excluir</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted text-center">Nenhum fornecedor cadastrado.</p>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Supplier> Suppliers = new()
+    {
+        new Supplier { Id = 1, Name = "Dourado", Contact = "João Silva", Phone = "(11) 98765-4321" },
+        new Supplier { Id = 2, Name = "Elma Chips", Contact = "Maria Oliveira", Phone = "(21) 99876-5432" },
+        new Supplier { Id = 3, Name = "Pepsico", Contact = "Pedro Santos", Phone = "(31) 91234-5678" }
+    };
+
+    private void AddSupplier()
+    {
+        // Simular ação de adição
+        Console.WriteLine("Adicionando novo fornecedor");
+    }
+
+    private void EditSupplier(int supplierId)
+    {
+        // Simular ação de edição
+        Console.WriteLine($"Editando fornecedor com ID: {supplierId}");
+    }
+
+    private void DeleteSupplier(int supplierId)
+    {
+        // Simular ação de exclusão
+        Console.WriteLine($"Excluindo fornecedor com ID: {supplierId}");
+        Suppliers.Remove(Suppliers.First(s => s.Id == supplierId));
+    }
+
+    private class Supplier
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Contact { get; set; }
+        public string Phone { get; set; }
+    }
+}

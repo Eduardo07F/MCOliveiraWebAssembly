@@ -1,0 +1,105 @@
+﻿@page "/ClientePage"
+@using Entidades;
+@using MCOliveiraWebAssembly.Services;
+@inject Services.IServices.IClienteService _clienteService;
+@inject NavigationManager _navigationManager;
+
+<PageTitle>Clientes</PageTitle>
+
+
+<div class="card mb-4 shadow-sm mx-auto col-md-6">
+    <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #05163D; color: honeydew;">
+        <h2>Cadastro de Clientes</h2>
+    </div>
+    <div class="card-body text-center">
+        <!-- Formulário de cadastro de clientes ou informações adicionais -->
+        <p class="text-muted"><b>Aqui você pode gerenciar os dados dos clientes e gerar pedidos por Cliente.</b></p>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header" style="background-color: #0A2464; color: honeydew;">
+        <h2>Detalhes dos Clientes</h2>
+
+        <button class="btn btn-info" @onclick="NovoCliente">Incluir Novo Cliente</button>
+    </div>
+    <div class="card-body">
+        @if (Clientes.Count > 0)
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cliente in Clientes)
+                    {
+                        <tr>
+                            <td>@cliente.id</td>
+                            <td>@cliente.Nome</td>
+                            <td>@cliente.Email</td>
+                            <td>@cliente.Telefone</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning" @onclick="() => EditarCliente(cliente.id)">Editar</button>
+                                <button class="btn btn-sm btn-danger" @onclick="() => ExcluirCliente(cliente.id)">Excluir</button>
+                                <button class="btn btn-sm btn-primary" @onclick="() => IncluirPedido(cliente.id)">Pedido</button>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">Carregando...</p>
+        }
+    </div>
+</div>
+
+@code {
+    public   List<Cliente> Clientes = new List<Cliente>();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetClientes();
+
+    }
+
+
+
+    public async Task GetClientes()
+    {
+        Clientes = await _clienteService.GetAll();
+    }
+
+    public void EditarCliente(int id)
+    {
+        // Logica para editar cliente
+        _navigationManager.NavigateTo("/ClienteEdit/"+id);
+    }
+
+    public void ExcluirCliente(int id)
+    {
+        // Lógica para excluir o cliente selecionado
+    }
+
+    public void NovoCliente()
+    {
+        // Lógica para Incluir um novo cliente
+        _navigationManager.NavigateTo("/ClienteAdd/");
+    }
+
+    public void IncluirPedido(int id)
+    {
+        // Lógica para Incluir um novo Pedido para o Cliente
+    }
+
+}
